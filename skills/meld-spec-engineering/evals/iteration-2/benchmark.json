@@ -1,0 +1,120 @@
+{
+  "metadata": {
+    "skill_name": "meld-spec-engineering",
+    "skill_path": "/Users/jamessolomon/src/solomonjames/bmad-beads/skills/meld-spec-engineering",
+    "executor_model": "claude-opus-4-6",
+    "timestamp": "2026-03-05T00:00:00Z",
+    "evals_run": [1, 2, 3],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1, "eval_name": "Avatar Upload Spec", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 8, "failed": 0, "total": 8, "time_seconds": 109.1, "tokens": 16083, "tool_calls": 5, "errors": 0},
+      "expectations": [
+        {"text": "Implementation tasks with specific file paths", "passed": true, "evidence": "10 tasks with exact file paths"},
+        {"text": "Tasks ordered by dependency", "passed": true, "evidence": "Gemfile -> model -> controller -> views -> routes -> assets"},
+        {"text": "Given/When/Then with AC-N numbering", "passed": true, "evidence": "AC-1 through AC-17"},
+        {"text": "Happy path coverage", "passed": true, "evidence": "AC-1 through AC-4"},
+        {"text": "Error case coverage", "passed": true, "evidence": "AC-5 (oversized), AC-6 (GIF), AC-7 (PDF), AC-8 (S3 failure)"},
+        {"text": "Edge case coverage", "passed": true, "evidence": "AC-9 (default), AC-10 (replace), AC-11 (remove), AC-12 (5MB exact), AC-13 (5MB+1), AC-14 (re-upload)"},
+        {"text": "Testing strategy section", "passed": true, "evidence": "Unit (10), Integration (7), Controller (5), Manual (4) - all mapped to ACs"},
+        {"text": "No TBD/placeholder values", "passed": true, "evidence": "All details inlined with code samples"}
+      ]
+    },
+    {
+      "eval_id": 1, "eval_name": "Avatar Upload Spec", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 0.875, "passed": 7, "failed": 1, "total": 8, "time_seconds": 63.6, "tokens": 11307, "tool_calls": 3, "errors": 0},
+      "expectations": [
+        {"text": "Implementation tasks with specific file paths", "passed": true, "evidence": "8 design sections with file paths"},
+        {"text": "Tasks ordered by dependency", "passed": true, "evidence": "Deps -> Model -> Controller -> Views -> Assets"},
+        {"text": "Given/When/Then with AC-N numbering", "passed": false, "evidence": "GWT in test plan table but no AC-N format in dedicated section"},
+        {"text": "Happy path coverage", "passed": true, "evidence": "Test scenarios 1, 2, 8, 11, 12"},
+        {"text": "Error case coverage", "passed": true, "evidence": "Test scenarios 3, 4, 10"},
+        {"text": "Edge case coverage", "passed": true, "evidence": "Replace (5), Remove (9), Default (13)"},
+        {"text": "Testing strategy section", "passed": true, "evidence": "Unit (7), Integration (3), System (4) in GWT table"},
+        {"text": "No TBD/placeholder values", "passed": true, "evidence": "Specific details throughout"}
+      ]
+    },
+    {
+      "eval_id": 2, "eval_name": "Email Prefs Evaluation", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 7, "failed": 0, "total": 7, "time_seconds": 44.1, "tokens": 9057, "tool_calls": 4, "errors": 0},
+      "expectations": [
+        {"text": "Identifies spec as NOT ready", "passed": true, "evidence": "Clear verdict with 'All five criteria failed'"},
+        {"text": "Flags missing file paths", "passed": true, "evidence": "'No file path specified. Which model file?'"},
+        {"text": "Flags vague actions", "passed": true, "evidence": "'What fields exactly? What data types?'"},
+        {"text": "Flags insufficient AC coverage", "passed": true, "evidence": "Lists missing error, edge case, authorization categories"},
+        {"text": "Flags inadequate testing", "passed": true, "evidence": "'This is not a testing strategy'"},
+        {"text": "References 5 criteria by name", "passed": true, "evidence": "Actionable/Logical/Testable/Complete/Self-Contained each with FAIL verdict"},
+        {"text": "Provides concrete fix suggestions", "passed": true, "evidence": "7 numbered gaps with specific remediation"}
+      ]
+    },
+    {
+      "eval_id": 2, "eval_name": "Email Prefs Evaluation", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 0.71, "passed": 5, "failed": 2, "total": 7, "time_seconds": 47.8, "tokens": 9696, "tool_calls": 3, "errors": 0},
+      "expectations": [
+        {"text": "Identifies spec as NOT ready", "passed": true, "evidence": "Clear NOT READY verdict"},
+        {"text": "Flags missing file paths", "passed": false, "evidence": "Asks questions but doesn't flag structural file path requirement"},
+        {"text": "Flags vague actions", "passed": true, "evidence": "'Which fields specifically?'"},
+        {"text": "Flags insufficient AC coverage", "passed": true, "evidence": "7 missing AC categories listed"},
+        {"text": "Flags inadequate testing", "passed": true, "evidence": "'not actionable'"},
+        {"text": "References 5 criteria by name", "passed": false, "evidence": "Uses own categories, not the 5 standard criteria"},
+        {"text": "Provides concrete fix suggestions", "passed": true, "evidence": "7 numbered recommendations"}
+      ]
+    },
+    {
+      "eval_id": 3, "eval_name": "Rate Limiting ACs", "configuration": "with_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 9, "failed": 0, "total": 9, "time_seconds": 47.2, "tokens": 12582, "tool_calls": 5, "errors": 0},
+      "expectations": [
+        {"text": "Given/When/Then with AC-N numbering", "passed": true, "evidence": "AC-1 through AC-18"},
+        {"text": "Happy path (under limit)", "passed": true, "evidence": "AC-1, AC-2, AC-3, AC-4"},
+        {"text": "Limit exceeded (429)", "passed": true, "evidence": "AC-5, AC-6"},
+        {"text": "Retry-After correctness", "passed": true, "evidence": "AC-13"},
+        {"text": "Premium tier (1000/min)", "passed": true, "evidence": "AC-3, AC-4, AC-6, AC-16"},
+        {"text": "Rate limit headers", "passed": true, "evidence": "AC-1, AC-3"},
+        {"text": "Sliding window reset", "passed": true, "evidence": "AC-8"},
+        {"text": "Missing/invalid API key", "passed": true, "evidence": "AC-7"},
+        {"text": "At least 8 ACs", "passed": true, "evidence": "18 ACs total, including idempotency (AC-14), tier change (AC-17), revoked key (AC-18)"}
+      ]
+    },
+    {
+      "eval_id": 3, "eval_name": "Rate Limiting ACs", "configuration": "without_skill", "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 9, "failed": 0, "total": 9, "time_seconds": 39.0, "tokens": 9662, "tool_calls": 3, "errors": 0},
+      "expectations": [
+        {"text": "Given/When/Then with AC-N numbering", "passed": true, "evidence": "AC-1 through AC-11"},
+        {"text": "Happy path (under limit)", "passed": true, "evidence": "AC-1, AC-2"},
+        {"text": "Limit exceeded (429)", "passed": true, "evidence": "AC-1 and AC-2 second scenarios"},
+        {"text": "Retry-After correctness", "passed": true, "evidence": "AC-6"},
+        {"text": "Premium tier (1000/min)", "passed": true, "evidence": "AC-2, AC-9"},
+        {"text": "Rate limit headers", "passed": true, "evidence": "AC-4, AC-5"},
+        {"text": "Sliding window reset", "passed": true, "evidence": "AC-3 with three timing scenarios"},
+        {"text": "Missing/invalid API key", "passed": true, "evidence": "AC-11"},
+        {"text": "At least 8 ACs", "passed": true, "evidence": "11 ACs total"}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 66.8, "stddev": 36.0, "min": 44.1, "max": 109.1},
+      "tokens": {"mean": 12574, "stddev": 3513, "min": 9057, "max": 16083}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.86, "stddev": 0.15, "min": 0.71, "max": 1.0},
+      "time_seconds": {"mean": 50.1, "stddev": 12.6, "min": 39.0, "max": 63.6},
+      "tokens": {"mean": 10222, "stddev": 842, "min": 9662, "max": 11307}
+    },
+    "delta": {
+      "pass_rate": "+0.14",
+      "time_seconds": "+16.7",
+      "tokens": "+2352"
+    }
+  },
+  "notes": [
+    "Eval 3 still passes 100% in both configurations, but with-skill now produces 18 ACs (up from 14 in iter-1) vs 11 without. The expanded coverage checklist drives idempotency (AC-14), tier change (AC-17), and revoked key (AC-18) ACs that the baseline doesn't produce.",
+    "Eval 1 with-skill now produces 17 ACs (up from 12 in iter-1), including boundary value testing (AC-12: exactly 5MB, AC-13: 5MB+1 byte) and S3 failure handling (AC-8). The 'commonly missed ACs' checklist is working.",
+    "Eval 2 with-skill output is now more structured: numbered criterion sections (1-5) with explicit FAIL verdicts and specific evidence citations. The evaluation process guidance added in the improved skill is driving this structure.",
+    "Without-skill baseline for Eval 1 improved from 75% to 87.5% (now includes a testing section), likely due to model variance rather than skill changes.",
+    "With-skill runs use ~23% more tokens and take ~33% longer, but the quality improvements are substantial: more ACs, better coverage categories, boundary testing, and test-to-AC mapping."
+  ]
+}

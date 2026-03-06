@@ -1,0 +1,14 @@
+{
+  "expectations": [
+    {"text": "Given/When/Then with AC-N numbering", "passed": true, "evidence": "18 ACs numbered AC-1 through AC-18, organized by Happy Path, Error Handling, Edge Cases, Authorization."},
+    {"text": "Happy path (under limit)", "passed": true, "evidence": "AC-1 (headers on every response), AC-2 (standard within limit), AC-3 (premium headers), AC-4 (premium within limit)"},
+    {"text": "Limit exceeded (429)", "passed": true, "evidence": "AC-5 (standard exceeded), AC-6 (premium exceeded)"},
+    {"text": "Retry-After correctness", "passed": true, "evidence": "AC-13: 'When the Retry-After value has elapsed, Then the next request succeeds'"},
+    {"text": "Premium tier (1000/min)", "passed": true, "evidence": "AC-3, AC-4, AC-6, AC-16 all cover premium tier behavior"},
+    {"text": "Rate limit headers", "passed": true, "evidence": "AC-1 lists all three headers. AC-3 covers premium headers."},
+    {"text": "Sliding window reset", "passed": true, "evidence": "AC-8: 'When 30 seconds pass and 40 of the original requests fall outside the 1-minute sliding window, Then the next request succeeds'"},
+    {"text": "Missing/invalid API key", "passed": true, "evidence": "AC-7: 'response status is 401 Unauthorized, And no rate limit headers are included'"},
+    {"text": "At least 8 ACs", "passed": true, "evidence": "18 distinct ACs defined, including idempotency (AC-14), tier change (AC-17), revoked key (AC-18)."}
+  ],
+  "summary": {"passed": 9, "failed": 0, "total": 9, "pass_rate": 1.0}
+}

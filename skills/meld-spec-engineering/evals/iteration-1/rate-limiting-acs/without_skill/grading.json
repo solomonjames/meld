@@ -1,0 +1,55 @@
+{
+  "expectations": [
+    {
+      "text": "Output uses Given/When/Then format with AC-N numbering",
+      "passed": true,
+      "evidence": "All 11 criteria use AC-N numbering (AC-1 through AC-11) with Given/When/Then format using bold keywords."
+    },
+    {
+      "text": "Includes AC for normal request under limit (happy path)",
+      "passed": true,
+      "evidence": "AC-1: 'Given a standard (non-premium) API key... When the key has made fewer than 100 requests... Then the request is processed normally'"
+    },
+    {
+      "text": "Includes AC for request when limit is exceeded (429 response)",
+      "passed": true,
+      "evidence": "AC-3: 'When the key has already made 100 requests... Then the API returns HTTP 429 Too Many Requests'"
+    },
+    {
+      "text": "Includes AC for Retry-After header correctness",
+      "passed": true,
+      "evidence": "AC-10: 'Given a rate-limited API key... Then waiting for the number of seconds specified in Retry-After and retrying results in a successful request'"
+    },
+    {
+      "text": "Includes AC for premium user higher limit (1000/min)",
+      "passed": true,
+      "evidence": "AC-2 (premium within limit) and AC-4 (premium exceeded) both cover 1000 request limit."
+    },
+    {
+      "text": "Includes AC for rate limit headers (X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset)",
+      "passed": true,
+      "evidence": "AC-5 covers all three headers on success. AC-6 covers headers on 429 responses including consistency between Retry-After and X-RateLimit-Reset."
+    },
+    {
+      "text": "Includes AC for edge case: sliding window reset behavior",
+      "passed": true,
+      "evidence": "AC-7: 'Given a standard API key that made 100 requests between T+0s and T+30s... When 31 seconds have elapsed (at T+61s)... Then new requests are accepted again'"
+    },
+    {
+      "text": "Includes AC for missing or invalid API key",
+      "passed": true,
+      "evidence": "AC-9: 'Given a request with no API key or an invalid API key... Then the system returns the appropriate authentication error (e.g., 401 Unauthorized)'"
+    },
+    {
+      "text": "At least 8 distinct acceptance criteria are defined",
+      "passed": true,
+      "evidence": "11 distinct acceptance criteria defined (AC-1 through AC-11)."
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "failed": 0,
+    "total": 9,
+    "pass_rate": 1.0
+  }
+}

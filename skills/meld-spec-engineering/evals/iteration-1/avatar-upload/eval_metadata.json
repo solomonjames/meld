@@ -1,0 +1,15 @@
+{
+  "eval_id": 1,
+  "eval_name": "avatar-upload",
+  "prompt": "I need to add user avatar upload to our Rails 7 app. Users should be able to upload a profile picture (JPEG or PNG, max 5MB) from their settings page. We use Active Storage with S3. The avatar should be displayed as a 100x100 thumbnail in the nav bar and a 300x300 image on the profile page. Write a complete implementation spec for this feature.",
+  "assertions": [
+    "Output contains implementation tasks with specific file paths (not just 'update the controller')",
+    "Tasks are ordered by dependency (model/migration before controller before view)",
+    "Output contains Given/When/Then acceptance criteria with AC-N numbering",
+    "ACs cover happy path (successful upload and display)",
+    "ACs cover error cases (wrong file type, file too large)",
+    "ACs cover edge cases (replacing existing avatar, no avatar default state)",
+    "Output includes a testing strategy section with unit and integration tests",
+    "No tasks contain TBD or placeholder values"
+  ]
+}

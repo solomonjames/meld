@@ -1,0 +1,45 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies the spec as NOT ready for development",
+      "passed": true,
+      "evidence": "Clear verdict: 'NOT READY FOR DEVELOPMENT' in heading. Summary score shows 'Not Ready' for Implementability."
+    },
+    {
+      "text": "Flags missing file paths in tasks (tasks say 'update the user model' not a specific file)",
+      "passed": false,
+      "evidence": "The evaluation asks probing questions ('Which fields exactly?', 'Where does this UI live?') but never explicitly flags that tasks are missing file paths. It discusses vagueness but doesn't connect it to the file-path-per-task standard."
+    },
+    {
+      "text": "Flags missing specific actions (tasks are vague about what fields, what form elements)",
+      "passed": true,
+      "evidence": "'Which fields exactly? Boolean toggles per email type? A JSON preferences object?', 'What form controls are used? Toggles, checkboxes, dropdowns?'"
+    },
+    {
+      "text": "Flags insufficient AC coverage (only one AC, no error/edge cases)",
+      "passed": true,
+      "evidence": "Table of 7 missing scenarios including default state, disable all, persistence, email service honoring, invalid input, admin override, unsubscribe links."
+    },
+    {
+      "text": "Flags the testing section as inadequate ('write some tests' is not a strategy)",
+      "passed": true,
+      "evidence": "'\"Write some tests\" is not actionable. A ready-for-dev spec should outline: Unit tests, Integration tests, UI tests, Edge case tests.'"
+    },
+    {
+      "text": "References the 5 ready-for-dev criteria by name (Actionable, Logical, Testable, Complete, Self-Contained)",
+      "passed": false,
+      "evidence": "Uses its own dimensions: 'Task clarity', 'Acceptance criteria', 'Test plan', 'Completeness', 'Implementability'. Does NOT use the 5 standard criteria names (Actionable, Logical, Testable, Complete, Self-Contained)."
+    },
+    {
+      "text": "Provides concrete suggestions for fixing each gap",
+      "passed": true,
+      "evidence": "8 numbered recommendations covering notification types, data model, API contracts, ACs, tests, migration, scope, and UI mockup."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 2,
+    "total": 7,
+    "pass_rate": 0.71
+  }
+}

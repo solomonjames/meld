@@ -1,0 +1,12 @@
+{
+  "expectations": [
+    {"text": "Identifies spec as NOT ready", "passed": true, "evidence": "'Verdict: NOT READY FOR DEVELOPMENT' and 'This spec requires substantial additional detail'"},
+    {"text": "Flags missing file paths", "passed": false, "evidence": "Asks probing questions ('Which fields specifically?', 'Where does this UI live?') but never explicitly flags that tasks lack file paths as a structural problem."},
+    {"text": "Flags vague actions", "passed": true, "evidence": "'What form controls are needed?', 'What happens on save?', 'Which email service?'"},
+    {"text": "Flags insufficient AC coverage", "passed": true, "evidence": "Lists 7 missing ACs: default preferences, mandatory notifications, persistence, email service respects prefs, partial opt-out, error handling, audit."},
+    {"text": "Flags inadequate testing", "passed": true, "evidence": "'\"Write some tests\" is not actionable. A ready-for-dev spec should specify: Unit tests, Integration tests, UI tests, Edge cases'"},
+    {"text": "References 5 criteria by name", "passed": false, "evidence": "Uses own categories: 'Task definitions', 'Acceptance criteria', 'Testing plan', 'Data model', 'API contract', etc. Does not use the 5 standard criteria (Actionable, Logical, Testable, Complete, Self-Contained)."},
+    {"text": "Provides concrete fix suggestions", "passed": true, "evidence": "7 numbered recommendations covering data model, notification categories, ACs, API contract, testing plan, compliance, UI specs."}
+  ],
+  "summary": {"passed": 5, "failed": 2, "total": 7, "pass_rate": 0.71}
+}

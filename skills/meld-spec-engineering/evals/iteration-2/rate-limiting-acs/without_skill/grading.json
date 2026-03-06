@@ -1,0 +1,14 @@
+{
+  "expectations": [
+    {"text": "Given/When/Then with AC-N numbering", "passed": true, "evidence": "11 ACs numbered AC-1 through AC-11, all using Given/When/Then format."},
+    {"text": "Happy path (under limit)", "passed": true, "evidence": "AC-1 (standard within limit), AC-2 (premium within limit)"},
+    {"text": "Limit exceeded (429)", "passed": true, "evidence": "AC-1 second scenario (standard exceeded), AC-2 second scenario (premium exceeded)"},
+    {"text": "Retry-After correctness", "passed": true, "evidence": "AC-6: 'When the client waits the number of seconds specified in the Retry-After header and retries, Then the retried request is accepted'"},
+    {"text": "Premium tier (1000/min)", "passed": true, "evidence": "AC-2 and AC-9 cover premium 1000/min limit"},
+    {"text": "Rate limit headers", "passed": true, "evidence": "AC-4 (headers on success, table format), AC-5 (headers on 429)"},
+    {"text": "Sliding window reset", "passed": true, "evidence": "AC-3: Three concrete timing scenarios demonstrating window expiration at T+61s"},
+    {"text": "Missing/invalid API key", "passed": true, "evidence": "AC-11: 'rejected with the appropriate authentication error (401/403) before rate limiting is evaluated'"},
+    {"text": "At least 8 ACs", "passed": true, "evidence": "11 distinct ACs defined."}
+  ],
+  "summary": {"passed": 9, "failed": 0, "total": 9, "pass_rate": 1.0}
+}

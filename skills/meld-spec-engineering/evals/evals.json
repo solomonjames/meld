@@ -1,0 +1,53 @@
+{
+  "skill_name": "meld-spec-engineering",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to add user avatar upload to our Rails 7 app. Users should be able to upload a profile picture (JPEG or PNG, max 5MB) from their settings page. We use Active Storage with S3. The avatar should be displayed as a 100x100 thumbnail in the nav bar and a 300x300 image on the profile page. Write a complete implementation spec for this feature.",
+      "expected_output": "A ready-for-dev spec with ordered implementation tasks (each with specific file paths and actions), Given/When/Then acceptance criteria covering happy path, validation errors, edge cases, and a testing strategy.",
+      "files": [],
+      "expectations": [
+        "Output contains implementation tasks with specific file paths (not just 'update the controller')",
+        "Tasks are ordered by dependency (model/migration before controller before view)",
+        "Output contains Given/When/Then acceptance criteria with AC-N numbering",
+        "ACs cover happy path (successful upload and display)",
+        "ACs cover error cases (wrong file type, file too large)",
+        "ACs cover edge cases (replacing existing avatar, no avatar default state)",
+        "Output includes a testing strategy section with unit and integration tests",
+        "No tasks contain TBD or placeholder values"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Please evaluate whether this spec is ready for development:\n\n# Feature: Email Notification Preferences\n\n## Tasks\n- [ ] Task 1: Update the user model to support notification preferences\n  - Action: Add fields for notification settings\n- [ ] Task 2: Create the preferences UI\n  - Action: Build a form for users to manage their preferences\n- [ ] Task 3: Update the email service\n  - Action: Check preferences before sending\n\n## Acceptance Criteria\n- AC-1: User can update preferences\n  - Given a logged-in user\n  - When they change their notification preferences\n  - Then the preferences are saved\n\n## Testing\n- Write some tests",
+      "expected_output": "A detailed evaluation identifying the spec as NOT ready-for-dev, with specific failures cited against each of the 5 ready-for-dev criteria (Actionable, Logical, Testable, Complete, Self-Contained).",
+      "files": [],
+      "expectations": [
+        "Identifies the spec as NOT ready for development",
+        "Flags missing file paths in tasks (tasks say 'update the user model' not a specific file)",
+        "Flags missing specific actions (tasks are vague about what fields, what form elements)",
+        "Flags insufficient AC coverage (only one AC, no error/edge cases)",
+        "Flags the testing section as inadequate ('write some tests' is not a strategy)",
+        "References the 5 ready-for-dev criteria by name (Actionable, Logical, Testable, Complete, Self-Contained)",
+        "Provides concrete suggestions for fixing each gap"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Write acceptance criteria for an API rate limiting feature. The system should limit API requests to 100 per minute per API key, with a sliding window. When the limit is exceeded, return 429 Too Many Requests with a Retry-After header. Premium users get 1000 requests per minute. Rate limit info should be returned in response headers (X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset).",
+      "expected_output": "Comprehensive Given/When/Then acceptance criteria covering the happy path, rate limit exceeded, premium tier, header correctness, edge cases (window reset, concurrent requests, missing API key), and authorization scenarios.",
+      "files": [],
+      "expectations": [
+        "Output uses Given/When/Then format with AC-N numbering",
+        "Includes AC for normal request under limit (happy path)",
+        "Includes AC for request when limit is exceeded (429 response)",
+        "Includes AC for Retry-After header correctness",
+        "Includes AC for premium user higher limit (1000/min)",
+        "Includes AC for rate limit headers (X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset)",
+        "Includes AC for edge case: sliding window reset behavior",
+        "Includes AC for missing or invalid API key",
+        "At least 8 distinct acceptance criteria are defined"
+      ]
+    }
+  ]
+}

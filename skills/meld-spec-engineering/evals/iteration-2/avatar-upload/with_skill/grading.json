@@ -1,0 +1,13 @@
+{
+  "expectations": [
+    {"text": "Output contains implementation tasks with specific file paths", "passed": true, "evidence": "10 tasks with specific paths: Gemfile, app/models/user.rb, app/controllers/settings_controller.rb, app/views/settings/edit.html.erb, config/routes.rb, app/views/layouts/_navbar.html.erb, app/views/profiles/show.html.erb, app/assets/images/default-avatar.png, app/assets/stylesheets/avatars.css"},
+    {"text": "Tasks are ordered by dependency", "passed": true, "evidence": "Gemfile (1) -> model (2) -> controller (3) -> view (4) -> remove action (5) -> routes (6) -> nav bar (7) -> profile (8) -> assets (9,10)"},
+    {"text": "Given/When/Then with AC-N numbering", "passed": true, "evidence": "17 ACs numbered AC-1 through AC-17, organized by coverage category (Happy Path, Error Handling, Edge Cases, Authorization)"},
+    {"text": "Happy path coverage", "passed": true, "evidence": "AC-1 (JPEG upload), AC-2 (nav bar display), AC-3 (profile display), AC-4 (PNG upload)"},
+    {"text": "Error case coverage", "passed": true, "evidence": "AC-5 (oversized), AC-6 (invalid type GIF), AC-7 (non-image PDF), AC-8 (S3 failure)"},
+    {"text": "Edge case coverage", "passed": true, "evidence": "AC-9 (default), AC-10 (replacement), AC-11 (removal), AC-12 (exactly 5MB boundary), AC-13 (5MB+1 byte), AC-14 (re-upload same image)"},
+    {"text": "Testing strategy section", "passed": true, "evidence": "Unit tests (10 scenarios in user_test.rb), Integration tests (7 scenarios), Controller tests (5 scenarios), Manual testing (4 items). Each test maps to specific ACs."},
+    {"text": "No TBD/placeholder values", "passed": true, "evidence": "All tasks have code samples, specific actions, and notes. No TBD/TODO found."}
+  ],
+  "summary": {"passed": 8, "failed": 0, "total": 8, "pass_rate": 1.0}
+}

@@ -1,0 +1,50 @@
+{
+  "expectations": [
+    {
+      "text": "Output contains implementation tasks with specific file paths (not just 'update the controller')",
+      "passed": true,
+      "evidence": "Each section specifies file paths: app/models/user.rb, app/controllers/users/avatars_controller.rb, config/routes.rb, app/helpers/avatar_helper.rb, app/views/users/settings/_avatar_form.html.erb, etc."
+    },
+    {
+      "text": "Tasks are ordered by dependency (model/migration before controller before view)",
+      "passed": true,
+      "evidence": "Order: 1-Model layer, 2-Image variants, 3-Controller, 4-Routes, 5-View helper, 6-Views, 7-CSS, 8-Default asset, 9-Direct upload, 10-S3 config. Model before controller before views."
+    },
+    {
+      "text": "Output contains Given/When/Then acceptance criteria with AC-N numbering",
+      "passed": false,
+      "evidence": "Uses Given/When/Then format but does NOT use AC-N numbering. Acceptance criteria are unnumbered paragraphs without titles."
+    },
+    {
+      "text": "ACs cover happy path (successful upload and display)",
+      "passed": true,
+      "evidence": "First two ACs cover successful JPEG/PNG upload to S3 and nav bar thumbnail display."
+    },
+    {
+      "text": "ACs cover error cases (wrong file type, file too large)",
+      "passed": true,
+      "evidence": "AC 4: 'attempt to upload a file that is not JPEG or PNG... rejected with validation error'. AC 5: 'attempt to upload a file larger than 5MB... rejected with validation error'."
+    },
+    {
+      "text": "ACs cover edge cases (replacing existing avatar, no avatar default state)",
+      "passed": true,
+      "evidence": "AC 3 covers removal. AC 7 covers default placeholder. However, replacing an existing avatar is NOT explicitly covered as an AC - it's only mentioned in the Edge Cases section as a note about atomic replacement."
+    },
+    {
+      "text": "Output includes a testing strategy section with unit and integration tests",
+      "passed": false,
+      "evidence": "No testing strategy section exists. The spec has sections for Technical Design, Implementation Steps, Acceptance Criteria, and Edge Cases, but no dedicated testing section."
+    },
+    {
+      "text": "No tasks contain TBD or placeholder values",
+      "passed": true,
+      "evidence": "All implementation steps have specific details. No TBD or placeholder text found."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 2,
+    "total": 8,
+    "pass_rate": 0.75
+  }
+}

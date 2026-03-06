@@ -1,0 +1,12 @@
+{
+  "expectations": [
+    {"text": "Identifies spec as NOT ready", "passed": true, "evidence": "Verdict: NOT READY FOR DEVELOPMENT. 'All five criteria failed.'"},
+    {"text": "Flags missing file paths", "passed": true, "evidence": "'No file path specified. Which model file?' for Task 1. 'No file path. No details on which framework' for Task 2."},
+    {"text": "Flags vague actions", "passed": true, "evidence": "'\"Add fields for notification settings\" -- No file path... What fields exactly? What data types?' and '\"Build a form\" is a project description, not an implementation task.'"},
+    {"text": "Flags insufficient AC coverage", "passed": true, "evidence": "'Only one AC exists. A single happy-path AC.' Lists missing categories: error handling, edge cases, authorization. Also flags vague Then clause."},
+    {"text": "Flags inadequate testing", "passed": true, "evidence": "'Testing section says \"Write some tests.\" This is not a testing strategy. No specific test files, scenarios, or mapping to ACs.'"},
+    {"text": "References 5 criteria by name", "passed": true, "evidence": "Five numbered sections: '1. Actionable -- FAIL', '2. Logical -- FAIL', '3. Testable -- FAIL', '4. Complete -- FAIL', '5. Self-Contained -- FAIL'. Each with specific evidence."},
+    {"text": "Provides concrete fix suggestions", "passed": true, "evidence": "7 numbered gaps: enumerate notification types, specify data model, provide file paths, expand ACs, make Then clauses observable, write concrete testing strategy, add dependency/context info."}
+  ],
+  "summary": {"passed": 7, "failed": 0, "total": 7, "pass_rate": 1.0}
+}

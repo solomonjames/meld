@@ -1,0 +1,45 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies the spec as NOT ready for development",
+      "passed": true,
+      "evidence": "Clear verdict: 'NOT READY FOR DEVELOPMENT' in bold heading. 'This spec fails all five ready-for-dev criteria.'"
+    },
+    {
+      "text": "Flags missing file paths in tasks (tasks say 'update the user model' not a specific file)",
+      "passed": true,
+      "evidence": "'not a single file is named. \"Update the user model\" should specify the exact model file, migration file, etc.'"
+    },
+    {
+      "text": "Flags missing specific actions (tasks are vague about what fields, what form elements)",
+      "passed": true,
+      "evidence": "'\"Add fields for notification settings\" does not say which fields, what types, or what defaults.'"
+    },
+    {
+      "text": "Flags insufficient AC coverage (only one AC, no error/edge cases)",
+      "passed": true,
+      "evidence": "Detailed coverage gap table showing Happy path (Partial), Error handling (Missing), Edge cases (Missing), Authorization checks (Missing)."
+    },
+    {
+      "text": "Flags the testing section as inadequate ('write some tests' is not a strategy)",
+      "passed": true,
+      "evidence": "'The spec states only \"Write some tests.\" The skill requires three categories: Unit tests, Feature/integration tests, Manual testing.'"
+    },
+    {
+      "text": "References the 5 ready-for-dev criteria by name (Actionable, Logical, Testable, Complete, Self-Contained)",
+      "passed": true,
+      "evidence": "Explicit Pass/Fail table with all 5 criteria: Actionable (FAIL), Logical (FAIL), Testable (FAIL), Complete (FAIL), Self-Contained (FAIL)."
+    },
+    {
+      "text": "Provides concrete suggestions for fixing each gap",
+      "passed": true,
+      "evidence": "6 numbered fixes: 1-Specify file paths, 2-Decompose tasks by dependency, 3-Define preference fields, 4-Add acceptance criteria, 5-Write testing strategy, 6-Add context sections."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  }
+}
