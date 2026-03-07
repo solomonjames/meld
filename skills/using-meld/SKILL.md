@@ -26,6 +26,7 @@ MELD (Methodology for Engineering Lifecycle & Development) provides a complete m
 | Starting isolated work on a ticket | `meld:meld-worktrees` | Built into quick-dev |
 | Code needs cleanup after implementation | `meld:meld-code-simplifier` | `meld:meld-verification` |
 | Implementation complete, need review | `meld:meld-adversarial-review` | `meld:meld-verification` |
+| Implementation complete, capture learnings | `meld:meld-retrospective` | Built into quick-dev |
 | Need an output template (tech-spec, PRD, etc.) | `meld:meld-artifact-templates` | — |
 
 ## When NOT to Use MELD Skills
@@ -64,13 +65,13 @@ bd close bd-abc123                          # done
 - **Beads-primary:** When a ticket ID is provided, all spec content is written to ticket fields. Local files are only created when beads is not active.
 - **Sub-tickets as tasks:** Implementation tasks from quick-spec become sub-tickets. Quick-dev tracks progress by updating and closing sub-tickets.
 - **Metadata read-merge-write:** `bd update --metadata` replaces the full JSON blob, so skills always read current metadata first (`bd show {ticket_id} --json`), merge new fields, then write the full object back.
-- **Comments at phase boundaries only:** One comment per phase transition (4 for quick-spec, 5 for quick-dev) to avoid noise.
+- **Comments at phase boundaries only:** One comment per phase transition (4 for quick-spec, 6 for quick-dev) to avoid noise.
 
 ## Available Skills
 
 ### Flow Skills (invoke these to run a workflow)
 - **`meld-quick-spec`** — Conversational spec engineering: understand → investigate → generate → review. Produces a ready-for-dev tech spec.
-- **`meld-quick-dev`** — Implementation flow: setup & mode detection → context gathering → execution → verify & self-check → adversarial review & resolution.
+- **`meld-quick-dev`** — Implementation flow: setup & mode detection → context gathering → execution → verify & self-check → adversarial review & resolution → retrospective capture.
 - **`meld-complexity-assessment`** — Evaluate complexity signals and route to the right depth of planning.
 
 ### Methodology Skills (invoked by flow skills or standalone)
@@ -82,6 +83,7 @@ bd close bd-abc123                          # done
 - **`meld-worktrees`** — Git worktree creation with ticket-based branch naming. Auto-creates worktrees for beads tickets. Invoked at quick-dev Phases 1 and 5.
 - **`meld-spec-engineering`** — Given/When/Then acceptance criteria format and ready-for-dev standards.
 - **`meld-adversarial-review`** — Code review with information asymmetry using subagents.
+- **`meld-retrospective`** — Post-implementation retrospective: categorizes findings patterns, measures spec accuracy, captures estimation signals, persists learnings to project memory. Built into quick-dev Phase 6.
 
 ### Reference Skills
 - **`meld-artifact-templates`** — Index of 8 output templates (tech-spec, story, PRD, product brief, architecture decision, epics, UX design, sprint status).

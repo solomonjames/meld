@@ -1,11 +1,11 @@
 ---
 name: meld-quick-dev
-description: Use when ready to implement a feature — 5-phase implementation flow with mode detection, TDD execution, verification, adversarial review, and finding resolution
+description: Use when ready to implement a feature — 6-phase implementation flow with mode detection, TDD execution, verification, adversarial review, finding resolution, and retrospective capture
 ---
 
 # Quick Dev
 
-Implementation flow that handles both spec-driven (Mode A) and direct instruction (Mode B) development. Includes TDD execution, verification, adversarial review, and finding resolution.
+Implementation flow that handles both spec-driven (Mode A) and direct instruction (Mode B) development. Includes TDD execution, verification, adversarial review, finding resolution, and retrospective capture.
 
 **Style:** Be direct and efficient — skip unnecessary ceremony, execute decisively, implement exactly what's specified without gold-plating.
 
@@ -18,6 +18,7 @@ Each phase exists for a specific reason:
 3. **Execute** — TDD ensures every behavioral change is verified as you go, not after the fact. Continuous execution without pausing keeps momentum.
 4. **Verify & Self-Check** — Fresh evidence for every completion claim. Models are prone to claiming "done" based on stale or assumed results. This phase forces honesty.
 5. **Adversarial Review & Resolution** — A subagent reviews the diff with NO context about intent. This information asymmetry catches issues the implementing agent is blind to — you can't review your own work objectively.
+6. **Retrospective Capture** — Categorizes findings, measures spec accuracy, captures estimation signals, and persists learnings to project memory so future specs avoid past mistakes.
 
 ## Beads Integration (Optional)
 
@@ -59,6 +60,7 @@ At skill start, create these tasks via TaskCreate. Mark `in_progress` when start
 | 4 | Verify and self-check | Running verification and self-check | 3 |
 | 5 | Adversarial review and resolve | Running adversarial review and resolving findings | 4 |
 | 6 | Write completion summary | Writing completion summary | 5 |
+| 7 | Capture retrospective | Capturing retrospective and persisting learnings | 6 |
 
 **Mode note:** Task 3 depends on task 1 in Mode A (skip context gathering) or task 2 in Mode B. If Mode A, mark task 2 `completed` immediately.
 
@@ -298,5 +300,23 @@ If `{beads_active}`:
 - Tests: all passing (count)
 - Review: N findings, M fixed, K skipped
 - Status: Complete
+
+---
+
+## Phase 6: Retrospective Capture
+
+### Skip Conditions
+If diff is trivial (<20 lines, <3 files) AND adversarial review produced zero findings, skip. Note: "Retrospective skipped — trivial change."
+
+### Invoke Retrospective
+**REQUIRED SUB-SKILL:** Use `meld:meld-retrospective`.
+Pass: baseline_commit, findings list, execution mode, spec tasks (Mode A), executed tasks, feature slug/ticket ID.
+
+### Phase 6 Beads Sync
+If `{beads_active}`:
+1. Merge metadata: `{"meld_step": "retrospective"}`
+2. `bd comment {ticket_id} "MELD quick-dev Phase 6 complete — retrospective captured"`
+
+---
 
 Suggest: commit, run additional tests, or start a new workflow.
