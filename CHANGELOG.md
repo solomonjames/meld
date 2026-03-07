@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-03-06
+
+### Removed
+
+- Legacy beads formula infrastructure: `formulas/` (7 TOML files), `skills/meld/` (46 step-based skill files), `legacy/install.sh`, `legacy/uninstall.sh`
+- Beads workflow documentation: `docs/beads-workflows.md`, `docs/migration-from-beads.md`
+- Beads integration sections from README.md, CLAUDE.md, and `skills/using-meld/SKILL.md`
+
+### Fixed
+
+- README.md: Corrected quick-dev phase count from 7 to 6
+- README.md: Added missing `meld-code-simplifier` and `meld-retrospective` to Methodology Skills table
+
 ## [0.1.0] - 2026-02-21
 
 ### Added

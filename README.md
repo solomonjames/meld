@@ -66,7 +66,7 @@ MELD provides **methodology skills** that structure how you approach development
 | Skill | Command | Description |
 |-------|---------|-------------|
 | `meld-quick-spec` | `/quick-spec` | 4-phase spec engineering: understand, investigate, generate, review |
-| `meld-quick-dev` | `/quick-dev` | 7-phase implementation: mode detect, context, execute, code simplify, self-check, review, resolve |
+| `meld-quick-dev` | `/quick-dev` | 6-phase implementation: setup & mode detect, context, execute, verify & self-check, review & resolve, retrospective |
 | `meld-complexity-assessment` | `/assess-complexity` | Complexity signals → routing to right depth |
 
 ### Methodology Skills
@@ -80,36 +80,14 @@ MELD provides **methodology skills** that structure how you approach development
 | `meld-worktrees` | Git worktree creation with ticket-based branch naming |
 | `meld-spec-engineering` | Given/When/Then format, task format, ready-for-dev standards |
 | `meld-adversarial-review` | Information-asymmetric code review via subagents |
+| `meld-code-simplifier` | Code simplification pass for clarity, consistency, and maintainability |
+| `meld-retrospective` | Post-implementation retrospective: findings patterns, spec accuracy, estimation signals |
 
 ### Reference Skills
 
 | Skill | Description |
 |-------|-------------|
 | `meld-artifact-templates` | 8 output templates (tech-spec, story, PRD, architecture, etc.) |
-
-## Beads Integration (Optional)
-
-MELD also works as a beads formula system for users who prefer ticket-based orchestration. See [docs/beads-workflows.md](docs/beads-workflows.md) for details.
-
-```bash
-# Install for beads (legacy method)
-./legacy/install.sh /path/to/your/project
-
-# Pour a formula
-bd mol pour meld-quick-spec --var project_name="MyApp" --var feature="Add avatar upload"
-```
-
-### Formula Reference
-
-| Formula | Steps | Gates | Use When |
-|---------|-------|-------|----------|
-| `meld-analysis` | 4 | 1 | Product vision, users, metrics, scope |
-| `meld-planning` | 6 | 2 | PRD and UX design specification |
-| `meld-solutioning` | 6 | 2 | Architecture, epics, stories, readiness |
-| `meld-implementation` | 7 | 2 | Sprint execution and review |
-| `meld-quick-spec` | 4 | 1 | Conversational spec engineering |
-| `meld-quick-dev` | 6 | 1 | Flexible implementation |
-| `meld-full` | 23 | 7 | Complete product lifecycle |
 
 ## License
 

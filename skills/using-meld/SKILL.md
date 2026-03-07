@@ -36,37 +36,6 @@ MELD (Methodology for Engineering Lifecycle & Development) provides a complete m
 - **Exploration/research** — Use exploration tools directly
 - **Refactoring with no behavior change** — Execution skills suffice
 
-## Beads Integration (Optional)
-
-MELD skills optionally integrate with **beads** for issue-based tracking. When a ticket ID is provided, the ticket becomes the spec artifact. No local files are created — all content lives in beads fields and sub-tickets.
-
-### Ticket-Based Workflow
-```
-bd create "Add avatar upload" -t feature    # idea captured
-... later ...
-/quick-spec bd-abc123                       # spec develops IN the ticket
-/quick-dev bd-abc123                        # implementation tracked via sub-tickets
-bd close bd-abc123                          # done
-```
-
-### Issue Field Mapping
-
-| MELD Artifact | Beads Field | Purpose |
-|---|---|---|
-| Spec summary (problem, solution, scope) | `design` | Design notes |
-| Acceptance criteria (Given/When/Then) | `acceptance_criteria` | Exact purpose match |
-| Technical context + task list | `notes` | Implementation details |
-| Implementation tasks | Sub-tickets | Individual task tracking |
-| MELD state machine | `metadata` (JSON) | Machine-readable phase/step tracking |
-| Phase transitions + decisions | `comments` | Human-readable audit trail |
-
-### How It Works
-- **Detection:** Skills check for beads by running `which bd`. **The `bd` CLI discovers `.beads/` by walking up from CWD, so all `bd` commands must be run from within the project directory.** If beads is not installed, CWD is outside the project tree, or no ticket ID is provided, all beads steps are silently skipped.
-- **Beads-primary:** When a ticket ID is provided, all spec content is written to ticket fields. Local files are only created when beads is not active.
-- **Sub-tickets as tasks:** Implementation tasks from quick-spec become sub-tickets. Quick-dev tracks progress by updating and closing sub-tickets.
-- **Metadata read-merge-write:** `bd update --metadata` replaces the full JSON blob, so skills always read current metadata first (`bd show {ticket_id} --json`), merge new fields, then write the full object back.
-- **Comments at phase boundaries only:** One comment per phase transition (4 for quick-spec, 6 for quick-dev) to avoid noise.
-
 ## Available Skills
 
 ### Flow Skills (invoke these to run a workflow)

@@ -32,19 +32,10 @@ This is **not** a code library — it is a plugin/workflow system with no build 
 - `skills/meld-retrospective/` — Post-implementation retrospective: findings patterns, spec accuracy, estimation signals, project memory persistence
 - `skills/meld-artifact-templates/` — 8 output templates + index
 
-### Beads Integration (Legacy)
-- `formulas/` — 7 TOML workflow definitions for beads users
-- `skills/meld/` — Original step-by-step skill files for beads formulas
-- `legacy/install.sh` / `legacy/uninstall.sh` — Copy formulas/skills into beads-enabled projects
-- `docs/beads-workflows.md` — Beads workflow documentation
-
 ## How It Works
 
 ### As a Plugin
 The SessionStart hook injects the `using-meld` meta-skill into every session. This provides a routing table so the agent knows when to invoke MELD skills. Users trigger flows via slash commands (`/quick-spec`) or direct skill invocation (`meld:meld-quick-spec`).
-
-### As Beads Formulas
-Formulas (TOML) define step sequences with dependencies. Each step references an agent persona and a skill file. The `legacy/install.sh` script copies formulas and skills into a beads-enabled project.
 
 ## Skill Authoring
 
@@ -74,4 +65,3 @@ Flow skills include a one-line `**Style:**` directive that sets behavioral expec
 - **Commands** (`commands/*.md`): Lightweight wrappers with YAML frontmatter (`description`, `disable-model-invocation: true`) that invoke a skill.
 - **Hooks** (`hooks/`): SessionStart injects meta-skill content. Uses JSON output compatible with both Cursor and Claude Code.
 - **Templates** (`skills/meld-artifact-templates/*.md`): Use `{{variable}}` placeholders and YAML frontmatter for metadata.
-- **Beads formulas** (`formulas/*.toml`): TOML with `[[step]]` arrays. Each step has `id`, `title`, `description`, `depends_on`.
