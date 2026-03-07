@@ -178,6 +178,6 @@ This skill is invoked at two points in `meld:meld-quick-dev`:
    - If not: offer worktree as an option
    - Re-capture baseline commit from worktree HEAD
 
-2. **Phase 5 (Adversarial Review & Resolution)** — After resolving findings:
+2. **Phase 5 (Completion)** — After final verification:
    - If in a worktree, present completion options (PR/Merge/Keep/Discard)
    - User decides what to do with the worktree

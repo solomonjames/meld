@@ -54,10 +54,9 @@ MELD provides **methodology skills** that structure how you approach development
 
 1. **Assess complexity** — Count complexity signals, route to direct execution, quick-spec, or full planning
 2. **Spec engineering** — Conversational flow that produces a ready-for-dev tech spec with Given/When/Then acceptance criteria
-3. **Implementation** — Mode A (from tech-spec) or Mode B (direct instructions) with continuous execution
-4. **Self-check** — 12-point audit covering tasks, tests, ACs, and code quality
-5. **Adversarial review** — Code review with information asymmetry (reviewer sees only the diff)
-6. **Finding resolution** — Walk through, auto-fix, or skip findings with human approval
+3. **Implementation** — Per-task subagent loop: TDD implementer → code simplifier → spec reviewer → adversarial code reviewer, with auto-fix cycles
+4. **Final verification** — Aggregate gate function across the full codebase
+5. **Completion** — Summary, worktree handling, retrospective capture
 
 ## Skills Reference
 
@@ -66,7 +65,7 @@ MELD provides **methodology skills** that structure how you approach development
 | Skill | Command | Description |
 |-------|---------|-------------|
 | `meld-quick-spec` | `/quick-spec` | 4-phase spec engineering: understand, investigate, generate, review |
-| `meld-quick-dev` | `/quick-dev` | 6-phase implementation: setup & mode detect, context, execute, verify & self-check, review & resolve, retrospective |
+| `meld-quick-dev` | `/quick-dev` | 5-phase implementation: setup & mode detect, context, per-task subagent loop (TDD + review), final verification, completion |
 | `meld-complexity-assessment` | `/assess-complexity` | Complexity signals → routing to right depth |
 
 ### Methodology Skills

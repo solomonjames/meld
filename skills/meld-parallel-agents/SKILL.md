@@ -123,5 +123,5 @@ This skill is optionally invoked in `meld:meld-quick-dev` Phase 3 (Execute):
 
 - When the task list contains 2+ independent tasks touching different files
 - Dispatch agents for independent tasks, execute dependent tasks sequentially
-- After all agents complete, run `meld:meld-verification` gate function
-- Continue to Phase 5 (Self-Check) as normal
+- After all agents complete, each task continues through per-task review steps (simplify, spec review, code review)
+- Continue to Phase 4 (Final Verification) as normal

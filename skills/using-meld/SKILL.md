@@ -40,19 +40,19 @@ MELD (Methodology for Engineering Lifecycle & Development) provides a complete m
 
 ### Flow Skills (invoke these to run a workflow)
 - **`meld-quick-spec`** — Conversational spec engineering: understand → investigate → generate → review. Produces a ready-for-dev tech spec.
-- **`meld-quick-dev`** — Implementation flow: setup & mode detection → context gathering → execution → verify & self-check → adversarial review & resolution → retrospective capture.
+- **`meld-quick-dev`** — Implementation flow: setup & mode detection → context gathering → per-task subagent loop (TDD + simplify + spec review + code review) → final verification → completion & retrospective.
 - **`meld-complexity-assessment`** — Evaluate complexity signals and route to the right depth of planning.
 
 ### Methodology Skills (invoked by flow skills or standalone)
 - **`meld-tdd`** — Test-driven development: Iron Law, Red-Green-Refactor cycle, rationalizations, red flags. Built into quick-dev's execution loop.
 - **`meld-debugging`** — Systematic debugging: 4-phase root cause methodology (investigate → analyze → hypothesize → implement). Activated by quick-dev halt conditions. Includes 3 supporting docs (root-cause-tracing, defense-in-depth, condition-based-waiting).
-- **`meld-code-simplifier`** — Code simplification pass: subagent reviews modified code for clarity, consistency, and maintainability. Can be invoked standalone or as part of a review workflow.
-- **`meld-verification`** — Verification before completion: 5-step gate function requiring fresh evidence for every completion claim. Invoked at quick-dev Phases 4 and 5.
+- **`meld-code-simplifier`** — Code simplification pass: subagent reviews modified code for clarity, consistency, and maintainability. Built into quick-dev's per-task loop.
+- **`meld-verification`** — Verification before completion: 5-step gate function requiring fresh evidence for every completion claim. Invoked at quick-dev Phase 4.
 - **`meld-parallel-agents`** — Parallel agent dispatch: identify independent domains, craft focused prompts, dispatch via Task tool, review and integrate. Optional in quick-dev Phase 3.
-- **`meld-worktrees`** — Git worktree creation with ticket-based branch naming. Auto-creates worktrees for beads tickets. Invoked at quick-dev Phases 1 and 5.
+- **`meld-worktrees`** — Git worktree creation with ticket-based branch naming. Auto-creates worktrees for beads tickets. Invoked at quick-dev Phases 1 and 5 (completion).
 - **`meld-spec-engineering`** — Given/When/Then acceptance criteria format and ready-for-dev standards.
 - **`meld-adversarial-review`** — Code review with information asymmetry using subagents.
-- **`meld-retrospective`** — Post-implementation retrospective: categorizes findings patterns, measures spec accuracy, captures estimation signals, persists learnings to project memory. Built into quick-dev Phase 6.
+- **`meld-retrospective`** — Post-implementation retrospective: categorizes findings patterns, measures spec accuracy, captures estimation signals, persists learnings to project memory. Built into quick-dev Phase 5.
 
 ### Reference Skills
 - **`meld-artifact-templates`** — Index of 8 output templates (tech-spec, story, PRD, product brief, architecture decision, epics, UX design, sprint status).

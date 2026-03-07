@@ -107,11 +107,9 @@ Only now can you say "done" or "complete." Include the evidence summary.
 
 ## Integration with Quick-Dev
 
-This skill is invoked at two points in `meld:meld-quick-dev`:
+This skill is invoked at one point in `meld:meld-quick-dev`:
 
-1. **Phase 4 (Verify & Self-Check)** — After the self-audit, run the full gate function. All claims from the audit must have fresh evidence.
-
-2. **Phase 5 (Adversarial Review & Resolution)** — After resolving review findings, run the gate function one last time. This catches regressions introduced during finding resolution.
+- **Phase 4 (Final Verification)** — After all per-task loops complete, run the full gate function against the entire codebase. Individual tasks already passed per-task reviews, but this catches integration issues and ensures all claims have fresh evidence.
 
 ## Verification for Agent Delegation
 

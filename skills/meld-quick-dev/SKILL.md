@@ -1,11 +1,11 @@
 ---
 name: meld-quick-dev
-description: Use when ready to implement a feature — 6-phase implementation flow with mode detection, TDD execution, verification, adversarial review, finding resolution, and retrospective capture
+description: Use when ready to implement a feature — 5-phase implementation flow with mode detection, per-task subagent loop (TDD + review), final verification, and completion
 ---
 
 # Quick Dev
 
-Implementation flow that handles both spec-driven (Mode A) and direct instruction (Mode B) development. Includes TDD execution, verification, adversarial review, finding resolution, and retrospective capture.
+Implementation flow that handles both spec-driven (Mode A) and direct instruction (Mode B) development. Uses a **controller pattern** where the main agent orchestrates fresh subagents for each task — implementing, simplifying, and reviewing per-task rather than at the end.
 
 **Style:** Be direct and efficient — skip unnecessary ceremony, execute decisively, implement exactly what's specified without gold-plating.
 
@@ -15,10 +15,21 @@ Each phase exists for a specific reason:
 
 1. **Setup & Mode Detection** — Establishes a baseline so you can diff later for review. Determines whether you have a spec (structured) or need to gather context (ad-hoc).
 2. **Context Gathering** (Mode B only) — Without a spec, you need to understand the codebase before writing code. Skipped in Mode A because the spec IS the context.
-3. **Execute** — TDD ensures every behavioral change is verified as you go, not after the fact. Continuous execution without pausing keeps momentum.
-4. **Verify & Self-Check** — Fresh evidence for every completion claim. Models are prone to claiming "done" based on stale or assumed results. This phase forces honesty.
-5. **Adversarial Review & Resolution** — A subagent reviews the diff with NO context about intent. This information asymmetry catches issues the implementing agent is blind to — you can't review your own work objectively.
-6. **Retrospective Capture** — Categorizes findings, measures spec accuracy, captures estimation signals, and persists learnings to project memory so future specs avoid past mistakes.
+3. **Execute (Per-Task Loop)** — Each task gets a fresh subagent for implementation, keeping the controller's context clean. Per-task review catches issues immediately rather than after all tasks are done — cheaper to fix, less context to unwind. Information asymmetry is preserved: the code quality reviewer sees ONLY the diff.
+4. **Final Verification** — Lightweight aggregate check that the full codebase is consistent after all tasks complete. Individual tasks passed their own reviews, but integration issues only surface when you look at the whole.
+5. **Completion** — Summary, worktree handling, retrospective capture, and beads sync. Everything needed to close out the work.
+
+## Controller Pattern
+
+The main agent is the **controller**. It:
+- Orchestrates the per-task loop (prepare → implement → simplify → review → complete)
+- Dispatches subagents for implementation, simplification, and review
+- Independently validates all subagent claims (runs tests itself, reads output)
+- Never writes implementation code directly
+- Answers subagent questions and re-dispatches when needed
+- Tracks findings and results for the aggregate report
+
+**Trust rule:** Never trust subagent completion claims. Always run tests independently after each subagent returns.
 
 ## Beads Integration (Optional)
 
@@ -52,15 +63,13 @@ Sync at each phase boundary:
 
 At skill start, create these tasks via TaskCreate. Mark `in_progress` when starting, `completed` when done.
 
-| # | subject | activeForm | blockedBy |
-|---|---------|------------|-----------|
-| 1 | Setup and detect mode | Setting up and detecting mode | — |
-| 2 | Gather context and confirm plan | Gathering context and confirming plan | 1 |
-| 3 | Execute implementation | Executing implementation tasks | 1 or 2 |
-| 4 | Verify and self-check | Running verification and self-check | 3 |
-| 5 | Adversarial review and resolve | Running adversarial review and resolving findings | 4 |
-| 6 | Write completion summary | Writing completion summary | 5 |
-| 7 | Capture retrospective | Capturing retrospective and persisting learnings | 6 |
+| # | subject | blockedBy |
+|---|---------|-----------|
+| 1 | Setup and detect mode | — |
+| 2 | Gather context and confirm plan | 1 |
+| 3 | Execute per-task loop | 1 or 2 |
+| 4 | Final verification | 3 |
+| 5 | Completion and retrospective | 4 |
 
 **Mode note:** Task 3 depends on task 1 in Mode A (skip context gathering) or task 2 in Mode B. If Mode A, mark task 2 `completed` immediately.
 
@@ -155,36 +164,168 @@ If `{beads_active}`:
 
 ---
 
-## Phase 3: Execute
+## Phase 3: Execute (Per-Task Loop)
+
+The controller orchestrates a subagent-driven loop for each task. The controller never writes implementation code directly.
 
 ### TDD Methodology
-This phase follows test-driven development. Read `meld:meld-tdd` for the full methodology — the core rule is **no production code without a failing test first.**
+This phase follows test-driven development. The implementer subagent receives `meld:meld-tdd` methodology via the implementer prompt — the core rule is **no production code without a failing test first.**
 
-**Exception:** If the project has no test framework or the task is configuration-only, skip TDD steps and implement directly. Note the exception.
+**Exception:** If the project has no test framework or the task is configuration-only, note the exception in the implementer prompt context.
 
-### Execution Loop
-For each task in the plan/spec:
+### Per-Task Loop
 
-1. **Start task** — If `{beads_active}` and tasks are sub-tickets: `bd update {sub_id} --status in_progress`
-2. **Load context** — Read relevant files, review patterns, identify test file locations and testing conventions
-3. **RED** — Write one minimal failing test capturing expected behavior. Run it. Confirm it fails because the feature is missing (not errors or typos). If it passes immediately, you're testing existing behavior — fix the test.
-4. **GREEN** — Write the simplest code to make the failing test pass. Run all tests. Confirm everything is green.
-5. **REFACTOR** — Clean up while keeping tests green. Remove duplication, improve names. Do not add behavior.
-6. **Mark complete** — If `{beads_active}` and tasks are sub-tickets: `bd close {sub_id}`
-7. **Continue immediately** — Next task without pausing
+For each task in the plan/spec, execute steps 1-6 sequentially:
 
-### Critical Rules
-- **Continuous execution** — Do NOT stop between tasks for approval. The human gate was Phase 2.
-- **Follow patterns** — Match existing codebase conventions exactly
-- **No gold-plating** — Implement exactly what's specified, nothing more
+#### Step 1: PREPARE
+
+```bash
+git rev-parse HEAD
+```
+Store as `task_baseline`. This anchors the diff for this specific task.
+
+If `{beads_active}` and tasks are sub-tickets: `bd update {sub_id} --status in_progress`
+
+Gather task context for the implementer:
+- Task description and acceptance criteria
+- Files in scope (which files to read/modify)
+- Project patterns (from Phase 1/2 context gathering)
+- Any relevant context from previous tasks in this loop
+
+#### Step 2: IMPLEMENT (Subagent)
+
+Read `implementer-prompt.md` from this skill directory. Construct the subagent prompt:
+
+```
+Agent tool call:
+  prompt: "<contents of implementer-prompt.md>
+
+  ## Task Description
+  {task_description}
+
+  ## Acceptance Criteria
+  {acceptance_criteria}
+
+  ## Files in Scope
+  {files_in_scope}
+
+  ## Project Patterns
+  {project_patterns}"
+  subagent_type: "general-purpose"
+  description: "TDD implement task N"
+```
+
+The subagent does RED/GREEN/REFACTOR internally and reports results.
+
+**After subagent returns:**
+1. **Validate independently** — Run the full test suite yourself. Never trust subagent claims.
+2. **If tests pass** → Continue to Step 3.
+3. **If tests fail** → Re-dispatch the implementer with the failure output appended to the prompt. Include: "The following tests are failing after your implementation. Fix them."
+4. **Max 3 attempts.** After 3 consecutive failures on the same task → halt (see Halt Conditions).
+
+**If subagent asks questions:** Answer them from your controller context, then re-dispatch with the answers included.
+
+#### Step 3: SIMPLIFY (Subagent)
+
+**Skip if** the task diff is fewer than 20 lines (`git diff --stat {task_baseline}` — check total insertions + deletions).
+
+Read `meld:meld-code-simplifier` (the SKILL.md content serves as the subagent prompt). Dispatch:
+
+```
+Agent tool call:
+  prompt: "<contents of meld-code-simplifier/SKILL.md>
+
+  ## Baseline
+  {task_baseline}
+
+  ## Files Changed
+  {list of files from task diff}"
+  subagent_type: "code-simplifier"
+  description: "Simplify task N code"
+```
+
+**After subagent returns:**
+1. Run the full test suite.
+2. **If tests pass** → Accept simplifications. Continue to Step 4.
+3. **If tests fail** → Revert the simplifier's changes (`git checkout {task_baseline} -- {affected_files}`), note "Simplifier changes reverted — broke tests", continue to Step 4.
+
+#### Step 4: SPEC REVIEW (Subagent)
+
+Read `spec-reviewer-prompt.md` from this skill directory. Dispatch:
+
+```
+Agent tool call:
+  prompt: "<contents of spec-reviewer-prompt.md>
+
+  ## Task Description
+  {task_description}
+
+  ## Acceptance Criteria
+  {acceptance_criteria}
+
+  ## Implementer Report
+  {implementer_report_from_step_2}"
+  subagent_type: "general-purpose"
+  description: "Spec review task N"
+```
+
+The spec reviewer reads actual code files and verifies compliance.
+
+**After subagent returns:**
+- **If PASS** → Continue to Step 5.
+- **If FAIL** → Re-dispatch the implementer (Step 2) with the spec review findings: "The spec reviewer found these issues. Fix them: {findings}". Then re-run spec review.
+- **Max 2 spec-review-fix cycles.** After 2 cycles with remaining issues → log unresolved findings and continue.
+
+#### Step 5: CODE QUALITY REVIEW (Subagent)
+
+**Skip if** the task diff is fewer than 10 lines.
+
+Capture the task diff:
+```bash
+git diff {task_baseline}
+```
+Include new files.
+
+Read `adversarial-reviewer-prompt.md` from this skill directory. Dispatch with information asymmetry preserved — the reviewer sees ONLY the diff:
+
+```
+Agent tool call:
+  prompt: "<contents of adversarial-reviewer-prompt.md>
+
+  <diff>
+  {task_diff}
+  </diff>"
+  subagent_type: "general-purpose"
+  description: "Code review task N"
+```
+
+**After subagent returns:**
+
+Process findings using the framework from `meld:meld-adversarial-review`:
+1. Rate each finding for severity (Critical/High/Medium/Low) and validity (Real/Noise/Undecided).
+2. **Auto-fix "Real" Critical and High findings** — Re-dispatch implementer with: "Fix these code review findings: {real_critical_and_high_findings}". Run tests after.
+3. **Log Medium and Low findings** — Record for the aggregate report but do not auto-fix.
+4. **Max 2 review-fix cycles.** After 2 cycles → log remaining findings and continue.
+
+#### Step 6: COMPLETE TASK
+
+1. Run the full test suite one final time.
+2. If `{beads_active}` and tasks are sub-tickets: `bd close {sub_id}`
+3. Record task results for the aggregate report:
+   - Files changed
+   - Tests added
+   - Spec review result (PASS/FAIL + findings)
+   - Code quality findings (count by severity/validity)
+   - Simplifications applied (count)
+4. Continue immediately to the next task.
 
 ### Parallel Execution (Optional)
-When the task list contains 2+ independent tasks (different files, no shared state), MAY dispatch via `meld:meld-parallel-agents`.
+When the task list contains 2+ **truly independent** tasks (different files, no shared state), the controller MAY dispatch multiple implementer subagents in parallel via `meld:meld-parallel-agents`. Each parallel task still goes through the full Step 1-6 loop — parallelism only applies to Step 2 (IMPLEMENT). Steps 3-6 run sequentially per task after parallel implementation completes.
 
 ### Halt Conditions
 ONLY halt for:
-- 3 consecutive failures on the same task
-- Tests failing with no obvious fix
+- 3 consecutive implementer failures on the same task
+- Tests failing after max re-dispatch attempts
 - Blocking dependency (missing package, API, etc.)
 - Ambiguity requiring user decision
 
@@ -195,90 +336,56 @@ Do NOT halt for minor warnings, optional improvements, or deprecation notices.
 ### Phase 3 Beads Sync
 If `{beads_active}` (after ALL tasks complete, not per-task):
 1. Merge metadata: `{"meld_step": "execute"}`
-2. `bd comment {ticket_id} "MELD quick-dev Phase 3 complete — {completed_count}/{total_count} tasks implemented"`
+2. `bd comment {ticket_id} "MELD quick-dev Phase 3 complete — {completed_count}/{total_count} tasks implemented, {total_findings} review findings ({fixed_count} auto-fixed)"`
 
 ---
 
-## Phase 4: Verify & Self-Check
+## Phase 4: Final Verification
 
-This phase combines self-audit with fresh verification evidence. The point: models are prone to claiming "done" based on memory or assumptions. Every claim needs proof from THIS session, AFTER the latest change.
+After all tasks complete, run a lightweight aggregate check. Individual tasks passed their own reviews, so this is about integration consistency.
 
-### Skip Conditions
-If the diff is trivial (fewer than 20 lines changed AND fewer than 3 files modified via `git diff --stat {baseline_commit}`), skip the full audit and just run the verification gate.
+### Run Verification Gate
+**REQUIRED:** Invoke `meld:meld-verification` gate function using `baseline_commit` (from Phase 1, not per-task baselines). Run the full test suite, linter, and build fresh. Read complete output.
 
-### Self-Audit Checklist
-Verify each item honestly:
-
-**Tasks:**
+### Abbreviated Self-Audit
+Verify:
 1. All tasks marked complete
 2. No tasks skipped without documented reason
-3. Implementation matches task descriptions (no drift)
-
-**Tests:**
-4. All existing tests still pass
-5. New tests written for new behavior
-6. Test coverage covers happy path and error/edge cases
-
-**Acceptance Criteria:**
-7. Each AC is demonstrably satisfied
-8. Edge cases from ACs are handled
-
-**Patterns:**
-9. Code follows existing codebase conventions
-10. No code smells introduced (duplication, god objects, deep nesting)
-
-### Verification Gate
-
-**REQUIRED:** Invoke `meld:meld-verification` gate function. Run the full test suite, linter, and build fresh. Read complete output. Match evidence to every claim from the audit above.
-
-Any claim without fresh evidence? Go back and gather it.
+3. Full test suite passes (fresh run, not cached)
+4. Build succeeds
+5. Linter clean (or only pre-existing warnings)
 
 ### Handle Failures
-Fix immediately if possible. Re-run affected tests. If not fixable, document and flag for user.
-
-### Present Summary
-- Tasks completed: N/N
-- Tests: X new, Y total passing
-- Files modified/created
-- Checklist: all items passing (or flagged)
+If any check fails: attempt to fix, re-run verification. If not fixable after one attempt, document and flag for user.
 
 ### Phase 4 Beads Sync
 If `{beads_active}`:
 1. Merge metadata: `{"meld_step": "verify"}`
-2. `bd comment {ticket_id} "MELD quick-dev Phase 4 complete — {pass_count}/10 checks passing, {new_test_count} new tests"`
-3. Update spec artifact: mark tasks `[x]`, add implementation notes if approach deviated.
+2. `bd comment {ticket_id} "MELD quick-dev Phase 4 complete — verification gate passed, all tests green"`
 
 ---
 
-## Phase 5: Adversarial Review & Resolution
+## Phase 5: Completion
 
-### Construct Diff
-```bash
-git diff {baseline_commit}
-```
-Include new files. Use NO_GIT fallback if needed.
+### Aggregate Summary
 
-### Invoke Review
-**REQUIRED SUB-SKILL:** Use `meld:meld-adversarial-review` for the full procedure.
+Present the full implementation summary:
 
-Use a subagent (Task tool) for true information asymmetry. The reviewer sees ONLY the diff and the reviewer prompt — NO spec, NO conversation history. This is the whole point: you can't objectively review code you just wrote, so a fresh agent with no context catches what you're blind to.
+**Tasks:**
+- Completed: N/N
+- Per-task results (1-line each): files changed, tests added, review findings
 
-### Process and Present Findings
-Number findings (F1, F2...) with severity and validity ratings. Order by severity. Flag zero findings as suspicious.
+**Findings (aggregate):**
 
-### Human Gate — Resolve Findings
-Present options:
-- **[W] Walk through** — Iterate each finding: Fix / Skip / Discuss
-- **[F] Fix automatically** — Fix all "Real" findings, skip Noise/Undecided
-- **[S] Skip** — Acknowledge and proceed
+| Severity | Total | Real | Fixed | Logged |
+|----------|-------|------|-------|--------|
+| Critical | N | N | N | N |
+| High | N | N | N | N |
+| Medium | N | N | N | N |
+| Low | N | N | N | N |
 
-### Apply Resolution
-- **Walk through:** Per-finding decision with test re-runs after fixes
-- **Fix automatically:** Filter to "Real" only, apply, re-run all tests, report
-- **Skip:** Note findings for future reference
-
-### Final Verification
-**REQUIRED:** Run `meld:meld-verification` gate function one last time. This catches regressions introduced during finding resolution.
+**Tests:** X new, Y total passing
+**Files:** N modified, M created
 
 ### Worktree Completion
 If in a worktree, present completion options via `meld:meld-worktrees`:
@@ -289,33 +396,18 @@ If in a worktree, present completion options via `meld:meld-worktrees`:
 
 **Wait for user decision.**
 
+### Retrospective Capture
+
+**Skip if** diff is trivial (<20 lines, <3 files) AND no review findings were generated. Note: "Retrospective skipped — trivial change."
+
+Otherwise, **REQUIRED SUB-SKILL:** Use `meld:meld-retrospective`.
+Pass: baseline_commit, findings list (aggregate from all tasks), execution mode, spec tasks (Mode A), executed tasks, feature slug/ticket ID.
+
 ### Phase 5 Beads Sync
 If `{beads_active}`:
-1. Merge metadata: `{"meld_phase": "done", "meld_step": "resolve-findings", "finding_count": {total}, "findings_fixed": {fixed_count}, "findings_skipped": {skipped_count}, "spec_status": "completed"}`
-2. `bd comment {ticket_id} "MELD quick-dev Phase 5 complete — {finding_count} findings ({fixed_count} fixed, {skipped_count} skipped). All tests passing."`
+1. Merge metadata: `{"meld_phase": "done", "meld_step": "complete", "finding_count": {total}, "findings_fixed": {fixed_count}, "findings_logged": {logged_count}, "spec_status": "completed"}`
+2. `bd comment {ticket_id} "MELD quick-dev Phase 5 complete — {finding_count} total findings ({fixed_count} fixed, {logged_count} logged). All tests passing."`
 3. Ask user: "Implementation is complete. Close this ticket? (`bd close {ticket_id} --reason 'Implementation complete — {summary}'`)"
-
-### Completion Summary
-- Files modified/created
-- Tests: all passing (count)
-- Review: N findings, M fixed, K skipped
-- Status: Complete
-
----
-
-## Phase 6: Retrospective Capture
-
-### Skip Conditions
-If diff is trivial (<20 lines, <3 files) AND adversarial review produced zero findings, skip. Note: "Retrospective skipped — trivial change."
-
-### Invoke Retrospective
-**REQUIRED SUB-SKILL:** Use `meld:meld-retrospective`.
-Pass: baseline_commit, findings list, execution mode, spec tasks (Mode A), executed tasks, feature slug/ticket ID.
-
-### Phase 6 Beads Sync
-If `{beads_active}`:
-1. Merge metadata: `{"meld_step": "retrospective"}`
-2. `bd comment {ticket_id} "MELD quick-dev Phase 6 complete — retrospective captured"`
 
 ---
 

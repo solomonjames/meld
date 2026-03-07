@@ -19,7 +19,7 @@ This is **not** a code library — it is a plugin/workflow system with no build 
 ### Skills (Plugin Skills)
 - `skills/using-meld/` — Meta-skill: routing table for when to use MELD vs other skills
 - `skills/meld-quick-spec/` — Merged 4-phase spec engineering flow
-- `skills/meld-quick-dev/` — Merged 6-phase implementation flow + adversarial reviewer prompt
+- `skills/meld-quick-dev/` — 5-phase implementation flow with per-task subagent loop + implementer/reviewer prompts
 - `skills/meld-complexity-assessment/` — Complexity signal evaluation and routing
 - `skills/meld-tdd/` — Test-driven development methodology (Red-Green-Refactor), embedded in quick-dev
 - `skills/meld-spec-engineering/` — Given/When/Then format, ready-for-dev standards
